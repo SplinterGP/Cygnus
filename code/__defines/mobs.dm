@@ -258,6 +258,22 @@
 #define BP_GROIN  "groin"
 #define BP_ALL list(BP_GROIN, BP_TORSO, BP_HEAD, BP_L_ARM, BP_R_ARM, BP_L_HAND, BP_R_HAND, BP_L_FOOT, BP_R_FOOT, BP_L_LEG, BP_R_LEG)
 
+#define BODY_ZONE_HEAD		"head"
+#define BODY_ZONE_CHEST		"chest"
+#define BODY_ZONE_L_ARM		"l_arm"
+#define BODY_ZONE_R_ARM		"r_arm"
+#define BODY_ZONE_L_LEG		"l_leg"
+#define BODY_ZONE_R_LEG		"r_leg"
+
+
+#define BODY_ZONE_PRECISE_EYES		"eyes"
+#define BODY_ZONE_PRECISE_MOUTH		"mouth"
+#define BODY_ZONE_PRECISE_GROIN		"groin"
+#define BODY_ZONE_PRECISE_L_HAND	"l_hand"
+#define BODY_ZONE_PRECISE_R_HAND	"r_hand"
+#define BODY_ZONE_PRECISE_L_FOOT	"l_foot"
+#define BODY_ZONE_PRECISE_R_FOOT	"r_foot" 
+
 #define SYNTH_BLOOD_COLOUR "#030303"
 #define SYNTH_FLESH_COLOUR "#575757"
 

@@ -3,6 +3,7 @@
 	appearance_flags = TILE_BOUND|PIXEL_SCALE|KEEP_TOGETHER
 	glide_size = 8
 	var/last_move = null //The direction the atom last moved
+	var/last_move_time = 0
 	var/anchored = 0
 	// var/elevation = 2    - not used anywhere
 	var/moving_diagonally
@@ -15,6 +16,7 @@
 	var/throw_range = 7
 	var/moved_recently = 0
 	var/mob/pulledby = null
+	var/atom/movable/pulling
 	var/item_state = null // Used to specify the item state for the on-mob overlays.
 	var/icon_scale_x = 1 // Used to scale icons up or down horizonally in update_transform().
 	var/icon_scale_y = 1 // Used to scale icons up or down vertically in update_transform().
@@ -68,134 +70,134 @@
 
 ////////////////////////////////////////
 /atom/movable/Move(atom/newloc, direct = 0, movetime)
+	. = FALSE
 	// Didn't pass enough info
-	if(!loc || !newloc)
-		return FALSE
+	if(!loc || !newloc || newloc == loc)
+		return 
 
 	// Store this early before we might move, it's used several places
 	var/atom/oldloc = loc
 
-	// If we're not moving to the same spot (why? does that even happen?)
-	if(loc != newloc)
-		if(!direct)
-			direct = get_dir(oldloc, newloc)
-		if (IS_CARDINAL(direct)) //Cardinal move
-			// Track our failure if any in this value
-			. = TRUE
+	if(!direct)
+		direct = get_dir(oldloc, newloc)
+	if (IS_CARDINAL(direct)) //Cardinal move
+		// Track our failure if any in this value
+		. = TRUE
 
-			// Face the direction of movement
-			set_dir(direct)
+		// Face the direction of movement
+		set_dir(direct)
 
-			// Check to make sure we can leave
-			if(!loc.Exit(src, newloc))
-				. = FALSE
-
-			// Check to make sure we can enter, if we haven't already failed
-			if(. && !newloc.Enter(src, src.loc))
-				. = FALSE
-
-			// Check to make sure if we're multi-tile we can move, if we haven't already failed
-			if(. && !check_multi_tile_move_density_dir(direct, locs))
-				. = FALSE
-
-			// Definitely moving if you enter this, no failures so far
-			if(. && locs.len <= 1)	// We're not a multi-tile object.
-				var/area/oldarea = get_area(oldloc)
-				var/area/newarea = get_area(newloc)
-				var/old_z = get_z(oldloc)
-				var/dest_z = get_z(newloc)
-
-				// Do The Move
-				glide_for(movetime)
-				loc = newloc
-				. = TRUE
-
-				// So objects can be informed of z-level changes
-				if (old_z != dest_z)
-					onTransitZ(old_z, dest_z)
-
-				// We don't call parent so we are calling this for byond
-				oldloc.Exited(src, newloc)
-				if(oldarea != newarea)
-					oldarea.Exited(src, newloc)
-
-				// Multi-tile objects can't reach here, otherwise you'd need to avoid uncrossing yourself
-				for(var/i in oldloc)
-					var/atom/movable/thing = i
-					// We don't call parent so we are calling this for byond
-					thing.Uncrossed(src)
-
-				// We don't call parent so we are calling this for byond
-				newloc.Entered(src, oldloc)
-				if(oldarea != newarea)
-					newarea.Entered(src, oldloc)
-
-				// Multi-tile objects can't reach here, otherwise you'd need to avoid uncrossing yourself
-				for(var/i in loc)
-					var/atom/movable/thing = i
-					// We don't call parent so we are calling this for byond
-					thing.Crossed(src, oldloc)
-
-			// We're a multi-tile object (multiple locs)
-			else if(. && newloc)
-				. = doMove(newloc)
-
-		//Diagonal move, split it into cardinal moves
-		else
-			moving_diagonally = FIRST_DIAG_STEP
-			var/first_step_dir
-			// The `&& moving_diagonally` checks are so that a forceMove taking
-			// place due to a Crossed, Bumped, etc. call will interrupt
-			// the second half of the diagonal movement, or the second attempt
-			// at a first half if step() fails because we hit something.
-			glide_for(movetime)
-			if (direct & NORTH)
-				if (direct & EAST)
-					if (step(src, NORTH) && moving_diagonally)
-						first_step_dir = NORTH
-						moving_diagonally = SECOND_DIAG_STEP
-						. = step(src, EAST)
-					else if (moving_diagonally && step(src, EAST))
-						first_step_dir = EAST
-						moving_diagonally = SECOND_DIAG_STEP
-						. = step(src, NORTH)
-				else if (direct & WEST)
-					if (step(src, NORTH) && moving_diagonally)
-						first_step_dir = NORTH
-						moving_diagonally = SECOND_DIAG_STEP
-						. = step(src, WEST)
-					else if (moving_diagonally && step(src, WEST))
-						first_step_dir = WEST
-						moving_diagonally = SECOND_DIAG_STEP
-						. = step(src, NORTH)
-			else if (direct & SOUTH)
-				if (direct & EAST)
-					if (step(src, SOUTH) && moving_diagonally)
-						first_step_dir = SOUTH
-						moving_diagonally = SECOND_DIAG_STEP
-						. = step(src, EAST)
-					else if (moving_diagonally && step(src, EAST))
-						first_step_dir = EAST
-						moving_diagonally = SECOND_DIAG_STEP
-						. = step(src, SOUTH)
-				else if (direct & WEST)
-					if (step(src, SOUTH) && moving_diagonally)
-						first_step_dir = SOUTH
-						moving_diagonally = SECOND_DIAG_STEP
-						. = step(src, WEST)
-					else if (moving_diagonally && step(src, WEST))
-						first_step_dir = WEST
-						moving_diagonally = SECOND_DIAG_STEP
-						. = step(src, SOUTH)
-			// If we failed, turn to face the direction of the first step at least
-			if(!. && moving_diagonally == SECOND_DIAG_STEP)
-				set_dir(first_step_dir)
-			// Done, regardless!
-			moving_diagonally = 0
-			// We return because step above will call Move() and we don't want to do shenanigans back in here again
+		// Check to make sure we can leave
+		if(!loc.Exit(src, newloc))
 			return
 
-	else if(!loc || (loc == oldloc))
+		// Check to make sure we can enter, if we haven't already failed
+		if(!newloc.Enter(src, loc))
+			return
+		// Check to make sure if we're multi-tile we can move, if we haven't already failed
+		if(!check_multi_tile_move_density_dir(direct, locs))
+			return
+
+		// Definitely moving if you enter this, no failures so far
+		if(!locs.len <= 1)	// We're a multi-tile object.
+			if(!newloc)
+				return
+			return doMove(newloc)
+		// Past this is the point of no return
+		SEND_SIGNAL(src, COMSIG_MOVABLE_PRE_MOVE, newloc)
+		var/area/oldarea = get_area(oldloc)
+		var/area/newarea = get_area(newloc)
+		var/old_z = get_z(oldloc)
+		var/dest_z = get_z(newloc)
+
+		// Do The Move
+		glide_for(movetime)
+		loc = newloc
+		. = TRUE
+
+		// So objects can be informed of z-level changes
+		if (old_z != dest_z)
+			onTransitZ(old_z, dest_z)
+
+		// We don't call parent so we are calling this for byond
+		oldloc.Exited(src, newloc)
+		if(oldarea != newarea)
+			oldarea.Exited(src, newloc)
+
+		// Multi-tile objects can't reach here, otherwise you'd need to avoid uncrossing yourself
+		for(var/i in oldloc)
+			var/atom/movable/thing = i
+			// We don't call parent so we are calling this for byond
+			thing.Uncrossed(src)
+
+		// We don't call parent so we are calling this for byond
+		newloc.Entered(src, oldloc)
+		if(oldarea != newarea)
+			newarea.Entered(src, oldloc)
+
+		// Multi-tile objects can't reach here, otherwise you'd need to avoid uncrossing yourself
+		for(var/i in loc)
+			var/atom/movable/thing = i
+			// We don't call parent so we are calling this for byond
+			thing.Crossed(src, oldloc)
+			
+
+	//Diagonal move, split it into cardinal moves
+	else
+		moving_diagonally = FIRST_DIAG_STEP
+		var/first_step_dir
+		// The `&& moving_diagonally` checks are so that a forceMove taking
+		// place due to a Crossed, Bumped, etc. call will interrupt
+		// the second half of the diagonal movement, or the second attempt
+		// at a first half if step() fails because we hit something.
+		glide_for(movetime)
+		if (direct & NORTH)
+			if (direct & EAST)
+				if (step(src, NORTH) && moving_diagonally)
+					first_step_dir = NORTH
+					moving_diagonally = SECOND_DIAG_STEP
+					. = step(src, EAST)
+				else if (moving_diagonally && step(src, EAST))
+					first_step_dir = EAST
+					moving_diagonally = SECOND_DIAG_STEP
+					. = step(src, NORTH)
+			else if (direct & WEST)
+				if (step(src, NORTH) && moving_diagonally)
+					first_step_dir = NORTH
+					moving_diagonally = SECOND_DIAG_STEP
+					. = step(src, WEST)
+				else if (moving_diagonally && step(src, WEST))
+					first_step_dir = WEST
+					moving_diagonally = SECOND_DIAG_STEP
+					. = step(src, NORTH)
+		else if (direct & SOUTH)
+			if (direct & EAST)
+				if (step(src, SOUTH) && moving_diagonally)
+					first_step_dir = SOUTH
+					moving_diagonally = SECOND_DIAG_STEP
+					. = step(src, EAST)
+				else if (moving_diagonally && step(src, EAST))
+					first_step_dir = EAST
+					moving_diagonally = SECOND_DIAG_STEP
+					. = step(src, SOUTH)
+			else if (direct & WEST)
+				if (step(src, SOUTH) && moving_diagonally)
+					first_step_dir = SOUTH
+					moving_diagonally = SECOND_DIAG_STEP
+					. = step(src, WEST)
+				else if (moving_diagonally && step(src, WEST))
+					first_step_dir = WEST
+					moving_diagonally = SECOND_DIAG_STEP
+					. = step(src, SOUTH)
+		// If we failed, turn to face the direction of the first step at least
+		if(moving_diagonally == SECOND_DIAG_STEP)
+			set_dir(first_step_dir)
+		// Done, regardless!
+		moving_diagonally = 0
+		// We return because step above will call Move() and we don't want to do shenanigans back in here again
+		return
+
+	if(!loc || (loc == oldloc) && oldloc != newloc)
 		last_move = 0
 		return
 
@@ -232,6 +234,7 @@
 // Make sure you know what you're doing if you call this, this is intended to only be called by byond directly.
 // You probably want CanPass()
 /atom/movable/Cross(atom/movable/AM)
+	SEND_SIGNAL(src, COMSIG_MOVABLE_CROSS, AM)
 	return CanPass(AM, loc)
 
 /atom/movable/CanPass(atom/movable/mover, turf/target)
@@ -243,16 +246,26 @@
 
 //oldloc = old location on atom, inserted when forceMove is called and ONLY when forceMove is called!
 /atom/movable/Crossed(atom/movable/AM, oldloc)
-	return
+	. = ..()
+	SEND_SIGNAL(AM, COMSIG_MOVABLE_CROSSED, src, oldloc)
+	SEND_SIGNAL(src, COMSIG_MOVABLE_CROSSED_BY, AM, oldloc)
 
 /atom/movable/Uncross(atom/movable/AM, atom/newloc)
 	. = ..()
+	if(SEND_SIGNAL(src, COMSIG_MOVABLE_UNCROSS, AM) & COMPONENT_MOVABLE_BLOCK_UNCROSS)
+		return FALSE
 	if(isturf(newloc) && !CheckExit(AM, newloc))
 		return FALSE
+
+/atom/movable/Uncrossed(atom/movable/AM)
+	SEND_SIGNAL(src, COMSIG_MOVABLE_UNCROSSED, AM)
+	
 
 /atom/movable/Bump(atom/A)
 	if(!A)
 		CRASH("Bump was called with no argument.")
+	if(SEND_SIGNAL(src, COMSIG_MOVABLE_BUMP, A) & COMPONENT_BUMP_RESOLVED)
+		return TRUE
 	. = ..()
 	if(throwing)
 		throw_impact(A)

@@ -39,6 +39,7 @@
 		dead_mob_list += src
 	else
 		living_mob_list += src
+	set_focus(src)
 	lastarea = get_area(src)
 	hook_vr("mob_new",list(src)) //VOREStation Code
 	update_transform() // Some mobs may start bigger or smaller than normal.
@@ -1102,40 +1103,6 @@ mob/verb/shifteast()
 /client/proc/check_has_body_select()
 	return mob && mob.hud_used && istype(mob.zone_sel, /obj/screen/zone_sel)
 
-/client/verb/body_toggle_head()
-	set name = "body-toggle-head"
-	set hidden = 1
-	toggle_zone_sel(list(BP_HEAD, O_EYES, O_MOUTH))
-
-/client/verb/body_r_arm()
-	set name = "body-r-arm"
-	set hidden = 1
-	toggle_zone_sel(list(BP_R_ARM,BP_R_HAND))
-
-/client/verb/body_l_arm()
-	set name = "body-l-arm"
-	set hidden = 1
-	toggle_zone_sel(list(BP_L_ARM,BP_L_HAND))
-
-/client/verb/body_chest()
-	set name = "body-chest"
-	set hidden = 1
-	toggle_zone_sel(list(BP_TORSO))
-
-/client/verb/body_groin()
-	set name = "body-groin"
-	set hidden = 1
-	toggle_zone_sel(list(BP_GROIN))
-
-/client/verb/body_r_leg()
-	set name = "body-r-leg"
-	set hidden = 1
-	toggle_zone_sel(list(BP_R_LEG,BP_R_FOOT))
-
-/client/verb/body_l_leg()
-	set name = "body-l-leg"
-	set hidden = 1
-	toggle_zone_sel(list(BP_L_LEG,BP_L_FOOT))
 
 /client/proc/toggle_zone_sel(list/zones)
 	if(!check_has_body_select())

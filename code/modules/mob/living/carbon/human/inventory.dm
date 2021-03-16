@@ -6,10 +6,11 @@ This saves us from having to call add_fingerprint() any time something is put in
 /mob/living/carbon/human
 	var/list/worn_clothing = list()	//Contains all CLOTHING items worn
 
-/mob/living/carbon/human/verb/quick_equip()
-	set name = "quick-equip"
-	set hidden = 1
-
+/mob/living/carbon/human/proc/do_quick_equip()
+	. = COMSIG_KB_ACTIVATED //The return value must be a flag compatible with the signals triggering this.
+	
+	if(incapacitated() || lying || istype(loc, /obj/mecha))
+		return
 	if(ishuman(src))
 		var/mob/living/carbon/human/H = src
 		var/obj/item/I = H.get_active_hand()
@@ -23,6 +24,7 @@ This saves us from having to call add_fingerprint() any time something is put in
 				update_inv_r_hand(0)
 		else
 			to_chat(H, "<font color='red'>You are unable to equip that.</font>")
+
 
 /mob/living/carbon/human/proc/equip_in_one_of_slots(obj/item/W, list/slots, del_on_fail = 1)
 	for (var/slot in slots)

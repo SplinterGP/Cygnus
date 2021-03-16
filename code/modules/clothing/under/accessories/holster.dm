@@ -41,7 +41,7 @@
 	holstered = null
 	name = initial(name)
 
-/obj/item/clothing/accessory/holster/proc/unholster(mob/user as mob)
+/obj/item/clothing/accessory/holster/proc/unholster(mob/user)
 	if(!holstered)
 		return
 
@@ -69,7 +69,7 @@
 		w_class = initial(w_class)
 		clear_holster()
 
-/obj/item/clothing/accessory/holster/attack_hand(mob/user as mob)
+/obj/item/clothing/accessory/holster/attack_hand(mob/user)
 	if (has_suit && (slot & ACCESSORY_SLOT_UTILITY))	//if we are part of a suit
 		if (holstered)
 			unholster(user)
@@ -77,7 +77,7 @@
 
 	..(user)
 
-/obj/item/clothing/accessory/holster/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/clothing/accessory/holster/attackby(obj/item/W, mob/user)
 	holster(W, user)
 
 /obj/item/clothing/accessory/holster/emp_act(severity)
@@ -130,6 +130,22 @@
 		H.holster(W, usr)
 	else
 		H.unholster(usr)
+
+//For the holster hotkey
+/mob/living/carbon/human/proc/do_holster()
+	. = COMSIG_KB_ACTIVATED //The return value must be a flag compatible with the signals triggering this.
+
+	//Todo make this work
+	var/obj/item/clothing/tie/holster/H
+
+	if(!H.holstered)
+		var/obj/item/W = get_active_hand()
+		if(!istype(W))
+			return
+		H.holster(W, src)
+	else
+		H.unholster(src)
+
 
 /obj/item/clothing/accessory/holster/armpit
 	name = "armpit holster"

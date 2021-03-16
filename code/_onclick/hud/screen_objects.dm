@@ -239,6 +239,7 @@
 	if(choice != selecting)
 		selecting = choice
 		update_icon()
+	return TRUE
 
 /obj/screen/zone_sel/update_icon()
 	cut_overlay(selecting_appearance)

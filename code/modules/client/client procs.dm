@@ -199,6 +199,10 @@
 	connection_realtime = world.realtime
 	connection_timeofday = world.timeofday
 
+	if(SSinput.initialized)
+		set_macros()
+		update_movement_keys()
+
 	if(custom_event_msg && custom_event_msg != "")
 		to_chat(src, "<h1 class='alert'>Custom Event</h1>")
 		to_chat(src, "<h2 class='alert'>A custom event is taking place. OOC Info:</h2>")

@@ -1,3 +1,7 @@
+/client/proc/get_admin_say()
+	var/msg = input(src, null, "msay \"text\"") as text|null
+	cmd_admin_say(msg)
+
 /client/proc/cmd_admin_say(msg as text)
 	set category = "Special Verbs"
 	set name = "Asay" //Gave this shit a shorter name so you only have to time out "asay" rather than "admin say" to use it --NeoFite
@@ -18,6 +22,10 @@
 	//VOREStation Edit End
 
 	feedback_add_details("admin_verb","M") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
+/client/proc/get_mod_say()
+	var/msg = input(src, null, "msay \"text\"") as text|null
+	cmd_mod_say(msg)
 
 /client/proc/cmd_mod_say(msg as text)
 	set category = "Special Verbs"
@@ -41,6 +49,9 @@
 			to_chat(C, "<span class='mod_channel'>" + create_text_tag("mod", "MOD:", C) + " <span class='name'>[sender_name]</span>([admin_jump_link(mob, C.holder)]): <span class='message'>[msg]</span></span>")
 
 	feedback_add_details("admin_verb","MS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
+/client/proc/get_event_say()
+	var/msg = input(src, null, "esay \"text\"") as text|null
 
 /client/proc/cmd_event_say(msg as text)
 	set category = "Special Verbs"

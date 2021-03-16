@@ -34,9 +34,6 @@
 
 /client/proc/diagonal_action(direction)
 	switch(client_dir(direction, 1))
-		if(NORTHEAST)
-			swap_hand()
-			return
 		if(SOUTHEAST)
 			attack_self()
 			return
@@ -47,21 +44,9 @@
 			else
 				to_chat(usr, "<font color='red'>This mob type cannot throw items.</font>")
 			return
-		if(NORTHWEST)
-			if(isliving(usr))
-				var/mob/living/carbon/C = usr
-				if(!C.get_active_hand())
-					if(C.pulling)
-						C.stop_pulling()
-						return
-					to_chat(usr, "<font color='red'>You have nothing to drop in your hand.</font>")
-					return
-				drop_item()
-			else
-				to_chat(usr, "<font color='red'>This mob type cannot drop items.</font>")
-			return
 
-//This gets called when you press the delete button.
+
+/*//This gets called when you press the delete button.
 /client/verb/delete_key_pressed()
 	set hidden = 1
 
@@ -78,32 +63,24 @@
 	if(istype(mob,/mob/living/silicon/robot))
 		var/mob/living/silicon/robot/R = mob
 		R.cycle_modules()
-	return
+	return*/
 
 
-
-/client/verb/attack_self()
-	set hidden = 1
-	if(mob)
-		mob.mode()
-	return
-
-
-/client/verb/toggle_throw_mode()
+/*/client/verb/toggle_throw_mode()
 	set hidden = 1
 	if(!istype(mob, /mob/living/carbon))
 		return
 	if (!mob.stat && isturf(mob.loc) && !mob.restrained())
 		mob:toggle_throw_mode()
 	else
-		return
+		return*/
 
 
-/client/verb/drop_item()
+/*/client/verb/drop_item()
 	set hidden = 1
 	if(!isrobot(mob) && mob.stat == CONSCIOUS && (isturf(mob.loc) || isbelly(mob.loc)))	// VOREStation Edit: dropping in bellies
 		return mob.drop_item()
-	return
+	return*/
 
 
 /client/Center()
@@ -479,7 +456,7 @@
 /mob/proc/update_gravity()
 	return
 
-/client/verb/moveup()
+/*/client/verb/moveup()
 	set name = ".moveup"
 	set instant = 1
 	Move(get_step(mob, NORTH), NORTH)
@@ -494,4 +471,4 @@
 /client/verb/moveleft()
 	set name = ".moveleft"
 	set instant = 1
-	Move(get_step(mob, WEST), WEST)
+	Move(get_step(mob, WEST), WEST)*/

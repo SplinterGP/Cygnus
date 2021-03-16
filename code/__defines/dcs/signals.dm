@@ -221,6 +221,8 @@
 #define COMSIG_MOVABLE_MOVED "movable_moved"
 ///from base of atom/movable/Cross(): (/atom/movable)
 #define COMSIG_MOVABLE_CROSS "movable_cross"
+///from base of atom/movable/crossed(): (/atom/movable)
+#define COMSIG_MOVABLE_CROSSED_BY "movable_crossed_by"
 ///from base of atom/movable/Crossed(): (/atom/movable)
 #define COMSIG_MOVABLE_CROSSED "movable_crossed"
 ///when we cross over something (calling Crossed() on that atom)
@@ -232,6 +234,7 @@
 #define COMSIG_MOVABLE_UNCROSSED "movable_uncrossed"
 ///from base of atom/movable/Bump(): (/atom)
 #define COMSIG_MOVABLE_BUMP "movable_bump"
+	#define COMPONENT_BUMP_RESOLVED (1<<0)
 ///from base of atom/movable/throw_impact(): (/atom/hit_atom, /datum/thrownthing/throwingdatum)
 #define COMSIG_MOVABLE_IMPACT "movable_impact"
 	#define COMPONENT_MOVABLE_IMPACT_FLIP_HITPUSH (1<<0)				//if true, flip if the impact will push what it hits
@@ -730,3 +733,64 @@
 ///SSalarm signals
 #define COMSIG_TRIGGERED_ALARM "ssalarm_triggered"
 #define COMSIG_CANCELLED_ALARM "ssalarm_cancelled"
+
+
+//* KEYBIND SIGNALS *\\
+
+//Mob keybinds
+#define COMSIG_KB_ACTIVATED (1<<0)
+
+#define COMSIG_KB_MOVEMENT_NORTH_DOWN "keybinding_movement_north_down"
+#define COMSIG_KB_MOVEMENT_SOUTH_DOWN "keybinding_movement_south_down"
+#define COMSIG_KB_MOVEMENT_WEST_DOWN "keybinding_movement_west_down"
+#define COMSIG_KB_MOVEMENT_EAST_DOWN "keybinding_movement_east_down"
+#define COMSIG_KB_MOB_FACENORTH_DOWN "keybinding_mob_facenorth_down"
+#define COMSIG_KB_MOB_FACEEAST_DOWN "keybinding_mob_faceeast_down"
+#define COMSIG_KB_MOB_FACESOUTH_DOWN "keybinding_mob_facesouth_down"
+#define COMSIG_KB_MOB_FACEWEST_DOWN "keybinding_mob_facewest_down"
+#define COMSIG_KB_MOB_LOCK_FACENORTH_DOWN "keybinding_mob_lock-facenorth_down"
+#define COMSIG_KB_MOB_LOCK_FACEEAST_DOWN "keybinding_mob_lock-faceeast_down"
+#define COMSIG_KB_MOB_LOCK_FACESOUTH_DOWN "keybinding_mob_lock-facesouth_down"
+#define COMSIG_KB_MOB_LOCK_FACEWEST_DOWN "keybinding_mob_lock-facewest_down"
+#define COMSIG_KB_MOB_STOPPULLING_DOWN "keybinding_mob_stoppulling_down"
+#define COMSIG_KB_MOB_CYCLEINTENTRIGHT_DOWN "keybinding_mob_cycleintentright_down"
+#define COMSIG_KB_MOB_CYCLEINTENTLEFT_DOWN "keybinding_mob_cycleintentleft_down"
+#define COMSIG_KB_MOB_SAY_DOWN "keybinding_mob_say_down"
+#define COMSIG_KB_MOB_ME_DOWN "keybinding_mob_me_down"
+#define COMSIG_KB_MOB_SWAPHANDS_DOWN "keybinding_mob_swaphands_down"
+#define COMSIG_KB_MOB_ACTIVATEINHAND_DOWN "keybinding_mob_activateinhand_down"
+#define COMSIG_KB_MOB_DROPITEM_DOWN "keybinding_mob_dropitem_down"
+#define COMSIG_KB_MOB_EXAMINE_DOWN "keybinding_mob_examine_down"
+#define COMSIG_KB_MOB_TARGETCYCLEHEAD_DOWN "keybinding_mob_targetcyclehead_down"
+#define COMSIG_KB_MOB_TARGETRIGHTARM_DOWN "keybinding_mob_targetrightarm_down"
+#define COMSIG_KB_MOB_TARGETBODYCHEST_DOWN "keybinding_mob_targetbodychest_down"
+#define COMSIG_KB_MOB_TARGETLEFTARM_DOWN "keybinding_mob_targetleftarm_down"
+#define COMSIG_KB_MOB_TARGETRIGHTLEG_DOWN "keybinding_mob_targetrightleg_down"
+#define COMSIG_KB_MOB_TARGETBODYGROIN_DOWN "keybinding_mob_targetbodygroin_down"
+#define COMSIG_KB_MOB_TARGETLEFTLEG_DOWN "keybinding_mob_targetleftleg_down"
+
+//Living keybinds
+#define COMSIG_KB_LIVING_RESIST_DOWN "keybinding_living_resist_down"
+
+//Carbon keybinds
+#define COMSIG_KB_CARBON_TOGGLETHROWMODE_DOWN "keybinding_carbon_togglethrowmode_down"
+#define COMSIG_KB_CARBON_TOGGLEREST_DOWN "kebinding_carbon_togglerest_down"
+#define COMSIG_KB_CARBON_SELECTHELPINTENT_DOWN "keybinding_carbon_selecthelpintent_down"
+#define COMSIG_KB_CARBON_SELECTDISARMINTENT_DOWN "keybinding_carbon_selectdisarmintent_down"
+#define COMSIG_KB_CARBON_SELECTGRABINTENT_DOWN "keybinding_carbon_selectgrabintent_down"
+#define COMSIG_KB_CARBON_SELECTHARMINTENT_DOWN "keybinding_carbon_selectharmintent_down"
+#define COMSIG_KB_CARBON_SPECIALCLICK_DOWN "keybinding_carbon_specialclick_down"
+
+//Admin keybinds
+#define COMSIG_KB_ADMIN_ASAY_DOWN "keybinding_admin_asay_down"
+#define COMSIG_KB_ADMIN_PLAYER_PANEL_DOWN "keybinding_admin_player_panel_down"
+#define COMSIG_KB_ADMIN_PM_DOWN "keybinding_admin_pm_down"
+
+//Client Keybindings
+#define COMSIG_KB_ADMINHELP_DOWN "keybinding_client_adminhelp_down"
+#define COMSIG_KB_CLIENT_OOC_DOWN "keybinding_client_ooc_down"
+#define COMSIG_KB_CLIENT_LOOC_DOWN "keybinding_client_looc_down"
+
+//Misc
+#define COMSIG_KB_QUICKEQUIP "keybinding_quickequip"
+#define COMSIG_KB_HOLSTER "keybinding_holster"
