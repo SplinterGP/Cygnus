@@ -39,6 +39,7 @@
 
 /datum/keybinding/carbon/select_help_intent
 	hotkey_keys = list("1")
+	classic_keys = list("Ctrl1")
 	name = "select_help_intent"
 	full_name = "Select help intent"
 	description = ""
@@ -50,7 +51,6 @@
 		return
 	user.mob?.a_intent_change(INTENT_HELP)
 	return TRUE
-
 
 /datum/keybinding/carbon/select_disarm_intent
 	hotkey_keys = list("2")
@@ -65,7 +65,6 @@
 		return
 	user.mob?.a_intent_change(INTENT_DISARM)
 	return TRUE
-
 
 /datum/keybinding/carbon/select_grab_intent
 	hotkey_keys = list("3")

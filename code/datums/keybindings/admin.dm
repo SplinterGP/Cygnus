@@ -29,6 +29,8 @@
     . = ..()
     if(.)
         return
+    user.player_panel_new()
+    return TRUE
 
 /datum/keybinding/admin/admin_pm
     name = "admin_pm"
@@ -37,3 +39,10 @@
     hotkey_keys = list("F7")
     classic_keys = list("F7")
     keybind_signal = COMSIG_KB_ADMIN_PM_DOWN
+
+/datum/keybinding/admin/admin_pm/down(client/user)
+    . = ..()
+    if(.)
+        return
+    user.cmd_admin_pm_panel()
+    return TRUE

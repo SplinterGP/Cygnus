@@ -114,6 +114,65 @@
 /datum/keybinding/mob/lock_direction_west/down(client/user)
 	user.mob.set_face_dir(client.client_dir(WEST))
 
+/datum/keybinding/mob/pixel_shift_north
+	hotkey_keys = list("CtrlShiftNorth")
+	classic_keys = list("CtrlShiftNorth")
+	name = "pixel_shift_north"
+	full_name = "Pixel shift north"
+	description = "Shifts your character a pixel north."
+	keybind_signal = COMSIG_KB_MOB_PIXEL_SHIFT_NORTH_DOWN
+
+/datum/keybinding/mob/pixel_shift_north/down(client/user)
+	. = ..()
+	if(.)
+		return
+	user.mob.shiftnorth()
+	return TRUE
+/datum/keybinding/mob/pixel_shift_south
+	hotkey_keys = list("CtrlShiftSouth")
+	classic_keys = list("CtrlShiftSouth")
+	name = "pixel_shift_south"
+	full_name = "Pixel shift south"
+	description = "Shifts your character a pixel south"
+	keybind_signal = COMSIG_KB_MOB_PIXEL_SHIFT_SOUTH_DOWN
+
+/datum/keybinding/mob/pixel_shift_south/down(client/user)
+	. = ..()
+	if(.)
+		return 
+	user.mob.shiftsouth()
+	return TRUE
+
+/datum/keybinding/mob/pixel_shift_east
+	hotkey_keys = list("CtrlShiftEast")
+	classic_keys = list("CtrlShiftEast")
+	name = "pixel_shift_east"
+	full_name = "Pixel shift east"
+	description = "Shifts your character a pixel east"
+	keybind_signal = COMSIG_KB_MOB_PIXEL_SHIFT_EAST_DOWN
+
+/datum/keybinding/mob/pixel_shift_east/down(client/user)
+	. = ..()
+	if(.)
+		return 
+	user.mob.shifteast()
+	return TRUE
+
+/datum/keybinding/mob/pixel_shift_west
+	hotkey_keys = list("CtrlShiftWest")
+	classic_keys = list("CtrlShiftWest")
+	name = "pixel_shift_west"
+	full_name = "Pixel shift west"
+	description = "Shifts your character a pixel west"
+	keybind_signal = COMSIG_KB_MOB_PIXEL_SHIFT_WEST_DOWN
+
+/datum/keybinding/mob/pixel_shift_west/down(client/user)
+	. = ..()
+	if(.)
+		return 
+	user.mob.shiftwest()
+	return TRUE
+
 /datum/keybinding/mob/stop_pulling
 	hotkey_keys = list("Delete")
 	classic_keys = list("Delete")
@@ -178,9 +237,9 @@
 	if(isliving(user.mob))
 		var/mob/living/L = user.mob
 		L.swap_hand()
-	/*if(istype(user.mob,/mob/living/silicon/robot))
+	if(istype(user.mob,/mob/living/silicon/robot))
 		var/mob/living/silicon/robot/R = user.mob
-		R.cycle_modules()*/
+		R.cycle_modules()
 	return TRUE
 
 /datum/keybinding/mob/say
@@ -199,12 +258,25 @@
 	M.say_wrapper()
 	return TRUE
 
+/datum/keybinding/mob/whisper
+	name = "whisper"
+	full_name = "Whisper"
+	hotkey_keys = list("Y")
+	description = ""
+	keybind_signal = COMSIG_KB_WHISPER_DOWN
+
+/datum/keybinding/mob/whisper/down(client/user)
+	. = ..()
+	if(.)
+		return
+	user.mob?.whisper()
+
 /datum/keybinding/mob/me
 	name = "me"
-	full_name = "Me"
+	full_name = "Emote"
 	hotkey_keys = list("M")
-	classic_keys = list("M")
-	description = ""
+	classic_keys = list("F4")
+	description = "Do a custom emote"
 	keybind_signal = COMSIG_KB_MOB_ME_DOWN
 
 /datum/keybinding/mob/me/down(client/user)
@@ -215,6 +287,20 @@
 	M.me_wrapper()
 	return TRUE
 
+/datum/keybinding/mob/subtle
+	name = "subtle"
+	full_name = "Subtle emote"
+	hotkey_keys = list()
+	description = "Do a subtle emote"
+	keybind_signal = COMSIG_KB_MOB_SUBTLE_DOWN
+
+/datum/keybinding/mob/subtle/down(client/user)
+	. = ..()
+	if(.)
+		return
+	user.mob?.me_verb_subtle()
+	return TRUE
+	
 /datum/keybinding/mob/activate_inhand
 	hotkey_keys = list("Z")
 	classic_keys = list("Southeast") // PAGEDOWN
